@@ -48,13 +48,14 @@ begin
   Qry := TFDQuery.Create(nil);
   try
     Qry.Connection := FConn;
-    Qry.SQL.Text := 'INSERT INTO enderecos (cep, logradouro, bairro, cidade, estado) ' +
-                    'VALUES (:cep, :logradouro, :bairro, :cidade, :estado)';
-    Qry.ParamByName('cep').AsString := AEndereco.Cep;
-    Qry.ParamByName('logradouro').AsString := AEndereco.Logradouro;
-    Qry.ParamByName('bairro').AsString := AEndereco.Bairro;
-    Qry.ParamByName('cidade').AsString := AEndereco.Localidade;
-    Qry.ParamByName('estado').AsString := AEndereco.Estado;
+    Qry.SQL.Text := 'INSERT INTO enderecos (cep, logradouro, complemento, bairro, cidade, estado) ' +
+                    'VALUES (:cep, :logradouro, :complemento, :bairro, :cidade, :estado)';
+    Qry.ParamByName('cep').AsString         := AEndereco.Cep;
+    Qry.ParamByName('logradouro').AsString  := AEndereco.Logradouro;
+    Qry.ParamByName('complemento').AsString := AEndereco.Complemento;
+    Qry.ParamByName('bairro').AsString      := AEndereco.Bairro;
+    Qry.ParamByName('cidade').AsString      := AEndereco.Localidade;
+    Qry.ParamByName('estado').AsString      := AEndereco.Estado;
     Qry.ExecSQL;
   finally
     Qry.Free;
@@ -68,12 +69,16 @@ begin
   Qry := TFDQuery.Create(nil);
   try
     Qry.Connection := FConn;
+
     Qry.SQL.Text := 'UPDATE enderecos SET cep = :cep, logradouro = :logradouro, ' +
-                    'bairro = :bairro, cidade = :cidade, estado = :estado ' +
+                    'complemento = :complemento, bairro = :bairro, cidade = :cidade, '+
+                    'estado = :estado ' +
                     'WHERE id = :id';
+
     Qry.ParamByName('id').AsInteger := AEndereco.Id;
     Qry.ParamByName('cep').AsString := AEndereco.Cep;
     Qry.ParamByName('logradouro').AsString := AEndereco.Logradouro;
+    Qry.ParamByName('complemento').AsString := AEndereco.Complemento;
     Qry.ParamByName('bairro').AsString := AEndereco.Bairro;
     Qry.ParamByName('cidade').AsString := AEndereco.Localidade;
     Qry.ParamByName('estado').AsString := AEndereco.Estado;
@@ -112,12 +117,14 @@ begin
     while not Qry.Eof do
     begin
       E := TEnderecoModel.Create;
-      E.Id := Qry.FieldByName('id').AsInteger;
-      E.Cep := Qry.FieldByName('cep').AsString;
-      E.Logradouro := Qry.FieldByName('logradouro').AsString;
-      E.Bairro := Qry.FieldByName('bairro').AsString;
-      E.Localidade := Qry.FieldByName('cidade').AsString;
-      E.Estado := Qry.FieldByName('estado').AsString;
+
+      E.Id          := Qry.FieldByName('id').AsInteger;
+      E.Cep         := Qry.FieldByName('cep').AsString;
+      E.Logradouro  := Qry.FieldByName('logradouro').AsString;
+      E.Complemento := Qry.FieldByName('complemento').AsString;
+      E.Bairro      := Qry.FieldByName('bairro').AsString;
+      E.Localidade  := Qry.FieldByName('cidade').AsString;
+      E.Estado      := Qry.FieldByName('estado').AsString;
       Result.Add(E);
       Qry.Next;
     end;

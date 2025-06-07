@@ -103,6 +103,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -133,6 +135,11 @@
         <DCCReference Include="src\Controller\Teste.Endereco.Controller.pas"/>
         <DCCReference Include="src\Controller\Teste.Endereco.Interfaces.Controller.pas"/>
         <DCCReference Include="src\Factory\Teste.Connection.Factory.pas"/>
+        <DCCReference Include="src\Service\Teste.ViaCEP.Interfaces.pas"/>
+        <DCCReference Include="src\Service\Teste.ViaCEP.Parse.Json.pas"/>
+        <DCCReference Include="src\Service\Teste.ViaCEP.Parse.XML.pas"/>
+        <DCCReference Include="src\Service\Teste.ViaCEP.Context.pas"/>
+        <DCCReference Include="src\Service\Teste.ViaCEP.Service.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -153,6 +160,10 @@
                 <Source>
                     <Source Name="MainSource">TesteViaCEP.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k290.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="5">
                 <DeployFile LocalName="Win32\Debug\TesteViaCEP.exe" Configuration="Debug" Class="ProjectOutput">

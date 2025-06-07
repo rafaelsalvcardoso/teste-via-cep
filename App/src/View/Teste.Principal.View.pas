@@ -9,16 +9,38 @@ uses
   Teste.Endereco.Controller,
   FireDAC.Comp.Client, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Grids,
   System.Generics.Collections,
-  Teste.Endereco.Model;
+  Teste.Endereco.Model, Vcl.ComCtrls;
 
 type
   TTesteViaCeEPForm = class(TForm)
-    StringGrid: TStringGrid;
-    Panel1: TPanel;
+    PageControl: TPageControl;
+    TSConsultarEnderecos: TTabSheet;
+    TSListarEnderecos: TTabSheet;
+    Panel: TPanel;
     ConsultarButton: TButton;
+    StringGrid: TStringGrid;
+    Memo: TMemo;
+    topPanel: TPanel;
+    FormatoComboBox: TComboBox;
+    EnderecoGroupBox: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    EditUF: TEdit;
+    EditCidade: TEdit;
+    EditLogradouro: TEdit;
+    ExecutarEnderecoButton: TButton;
+    CEPGroupBox: TGroupBox;
+    Label4: TLabel;
+    CepEdit: TEdit;
+    ExecutarCepButton: TButton;
+    ConsultaPanel: TPanel;
+    Label5: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ConsultarButtonClick(Sender: TObject);
+    procedure ExecutarCepButtonClick(Sender: TObject);
+    procedure ExecutarEnderecoButtonClick(Sender: TObject);
   private
     FConnection: TFDConnection;
     FEnderecoController: IEnderecoController;
@@ -32,7 +54,7 @@ var
 implementation
 
 uses
-  Teste.Connection.Factory;
+  Teste.Connection.Factory, Teste.ViaCEP.Service;
 
 {$R *.dfm}
 
@@ -68,6 +90,38 @@ begin
     Lista.Free;
   end;
 
+end;
+
+procedure TTesteViaCeEPForm.ExecutarCepButtonClick(Sender: TObject);
+var
+  lEndereco: TEnderecoModel;
+begin
+  lEndereco := TViaCEPService.ConsultarPorCEP(CepEdit.Text, TViaCEPFormato(FormatoComboBox.ItemIndex));
+  try
+    try
+      FEnderecoController.Salvar(lEndereco);
+    except
+      raise Exception.Create('Erro ao salvar endereço');
+    end;
+    Memo.Lines.Clear;
+    Memo.Lines.Add( lEndereco.toString );
+  finally
+    lEndereco.Free;
+  end;
+end;
+
+procedure TTesteViaCeEPForm.ExecutarEnderecoButtonClick(Sender: TObject);
+var
+  lEndereco: TEnderecoModel;
+begin
+  lEndereco := TViaCEPService.ConsultarPorEndereco(EditUF.Text, EditCidade.Text, EditLogradouro.Text,
+                 TViaCEPFormato(FormatoComboBox.ItemIndex) );
+  try
+    Memo.Lines.Clear;
+    Memo.Lines.Add( lEndereco.toString );
+  finally
+    lEndereco.Free;
+  end;
 end;
 
 procedure TTesteViaCeEPForm.FormCreate(Sender: TObject);

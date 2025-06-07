@@ -28,7 +28,7 @@ type
   protected
     { Protected declarations }
   public
-    constructor Create;
+    constructor Create; reintroduce; overload;
     destructor Destroy; override;
 
     function GetCEP(const ACEP: string): string;
@@ -66,6 +66,7 @@ end;
 
 constructor TViaCEP.Create;
 begin
+  inherited Create(nil);
 end;
 
 procedure TViaCEP.CriarComponentes;

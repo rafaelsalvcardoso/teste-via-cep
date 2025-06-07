@@ -34,8 +34,18 @@ type
     property Gia: string read FGia write FGia;
     property Ddd: string read FDdd write FDdd;
     property Siafi: string read FSiafi write FSiafi;
+
+    function toString: String;
   end;
 
 implementation
+
+{ TEnderecoModel }
+
+function TEnderecoModel.toString: String;
+begin
+  Result := FCep +sLineBreak+ FLogradouro +' - '+ FComplemento +sLineBreak+
+    FBairro +sLineBreak+ FLocalidade +sLineBreak+ FUf;
+end;
 
 end.
