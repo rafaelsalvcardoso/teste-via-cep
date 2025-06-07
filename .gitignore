@@ -1,0 +1,5 @@
+*.pas.~*
+componente/*.pas.~*
+componente/__history/*
+componente/src/__history/*
+componente/src/*.pas.~*
