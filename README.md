@@ -122,4 +122,3 @@ O projeto utiliza o padrão **Strategy** para selecionar dinamicamente o tipo de
 ```delphi
 Endereco := TViaCEPService.ConsultarPorCEP(CepEdit.Text, vcJSON); // ou vcXML
 ```
-

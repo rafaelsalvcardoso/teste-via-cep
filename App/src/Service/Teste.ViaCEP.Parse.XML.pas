@@ -3,39 +3,67 @@ unit Teste.ViaCEP.Parse.XML;
 interface
 
 uses
+  System.Generics.Collections,
+  Xml.XMLDoc,
+  Xml.XMLIntf,
   Teste.ViaCEP.Interfaces,
   Teste.Endereco.Model;
 
 type
   TViaCEPParseXML = class(TInterfacedObject, IViaCEP)
+  private
+    function CriarEndereco(AXMLNode: IXMLNode): TEnderecoModel;
   public
     function Deserialize(const AContent: string): TEnderecoModel;
+    function DeserializeList(const AContent: string): TObjectList<TEnderecoModel>;
   end;
 
 implementation
 
-uses
-  Xml.XMLDoc, Xml.XMLIntf;
+function TViaCEPParseXML.CriarEndereco(AXMLNode: IXMLNode): TEnderecoModel;
+begin
+  Result := TEnderecoModel.Create;
+  Result.Cep         := AXMLNode.ChildNodes['cep'].Text;
+  Result.Logradouro  := AXMLNode.ChildNodes['logradouro'].Text;
+  Result.Complemento := AXMLNode.ChildNodes['complemento'].Text;
+  Result.Bairro      := AXMLNode.ChildNodes['bairro'].Text;
+  Result.Localidade  := AXMLNode.ChildNodes['localidade'].Text;
+  Result.Estado      := AXMLNode.ChildNodes['uf'].Text;
+end;
 
 function TViaCEPParseXML.Deserialize(const AContent: string): TEnderecoModel;
 var
-  XMLDoc: TXMLDocument;
+  XMLDoc: IXMLDocument;
   Root: IXMLNode;
 begin
-  Result := TEnderecoModel.Create;
+  Result := nil;
+
   XMLDoc := TXMLDocument.Create(nil);
-  try
-    XMLDoc.LoadFromXML(AContent);
-    XMLDoc.Active := True;
-    Root := XMLDoc.DocumentElement;
-    Result.Cep         := Root.ChildNodes['cep'].Text;
-    Result.Logradouro  := Root.ChildNodes['logradouro'].Text;
-    Result.Complemento := Root.ChildNodes['complemento'].Text;
-    Result.Bairro      := Root.ChildNodes['bairro'].Text;
-    Result.Localidade  := Root.ChildNodes['localidade'].Text;
-    Result.Estado      := Root.ChildNodes['uf'].Text;
-  finally
-    XMLDoc.Free;
+  XMLDoc.LoadFromXML(AContent);
+  Root := XMLDoc.ChildNodes.FindNode('xmlcep');
+
+  Result := CriarEndereco(Root);
+end;
+
+function TViaCEPParseXML.DeserializeList(
+  const AContent: string): TObjectList<TEnderecoModel>;
+var
+  XMLDoc: IXMLDocument;
+  RootNode, EnderecosNode, EnderecoNode: IXMLNode;
+  I: Integer;
+begin
+  Result := TObjectList<TEnderecoModel>.Create(True);
+
+  XMLDoc := TXMLDocument.Create(nil);
+  XMLDoc.LoadFromXML(AContent);
+
+  RootNode := XMLDoc.ChildNodes.FindNode('xmlcep');
+  EnderecosNode := RootNode.ChildNodes.FindNode('enderecos');
+
+  for I := 0 to Pred(EnderecosNode.ChildNodes.Count) do
+  begin
+    EnderecoNode := EnderecosNode.ChildNodes[I];
+    Result.Add(CriarEndereco(EnderecoNode));
   end;
 end;
 

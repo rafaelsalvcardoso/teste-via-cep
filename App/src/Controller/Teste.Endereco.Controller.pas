@@ -18,7 +18,8 @@ type
     constructor Create(AConnection: TFDConnection);
     procedure Salvar(AEndereco: TEnderecoModel);
     procedure Excluir(Id: Integer);
-    function Listar: TObjectList<TEnderecoModel>;
+    function ListarPorCEP(const ACep: string): TEnderecoModel;
+    function ListarEnderecos: TObjectList<TEnderecoModel>;
   end;
 
 implementation
@@ -41,9 +42,14 @@ begin
   FDAO.Excluir(Id);
 end;
 
-function TEnderecoController.Listar: TObjectList<TEnderecoModel>;
+function TEnderecoController.ListarPorCEP(const ACep: string): TEnderecoModel;
 begin
-  Result := FDAO.Listar;
+  Result := FDAO.ListarPorCEP(ACep);
+end;
+
+function TEnderecoController.ListarEnderecos: TObjectList<TEnderecoModel>;
+begin
+  Result := FDAO.ListarEnderecos;
 end;
 
 end.

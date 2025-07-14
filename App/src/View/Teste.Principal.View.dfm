@@ -3,7 +3,7 @@ object TesteViaCeEPForm: TTesteViaCeEPForm
   Top = 0
   Caption = 'TesteViaCeEPForm'
   ClientHeight = 573
-  ClientWidth = 647
+  ClientWidth = 896
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,35 +17,37 @@ object TesteViaCeEPForm: TTesteViaCeEPForm
   object PageControl: TPageControl
     Left = 0
     Top = 0
-    Width = 647
+    Width = 896
     Height = 573
     ActivePage = TSConsultarEnderecos
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 624
-    ExplicitHeight = 484
+    ExplicitWidth = 894
+    ExplicitHeight = 565
     object TSConsultarEnderecos: TTabSheet
       Caption = 'Consultar Endere'#231'os'
       object Memo: TMemo
         AlignWithMargins = True
         Left = 3
         Top = 279
-        Width = 633
+        Width = 882
         Height = 261
         Align = alClient
+        ScrollBars = ssVertical
         TabOrder = 2
-        ExplicitTop = 256
-        ExplicitHeight = 262
+        ExplicitWidth = 880
+        ExplicitHeight = 253
       end
       object topPanel: TPanel
         Left = 0
         Top = 0
-        Width = 639
+        Width = 888
         Height = 73
         Align = alTop
         BevelOuter = bvNone
         ParentBackground = False
         TabOrder = 0
+        ExplicitWidth = 886
         object Label5: TLabel
           Left = 11
           Top = 19
@@ -69,25 +71,24 @@ object TesteViaCeEPForm: TTesteViaCeEPForm
       object ConsultaPanel: TPanel
         Left = 0
         Top = 73
-        Width = 639
+        Width = 888
         Height = 203
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        ExplicitTop = 54
+        ExplicitWidth = 886
         object EnderecoGroupBox: TGroupBox
           AlignWithMargins = True
           Left = 3
           Top = 108
-          Width = 633
+          Width = 882
           Height = 92
           Align = alBottom
           Caption = 'Por endere'#231'o'
           Ctl3D = False
           ParentCtl3D = False
           TabOrder = 1
-          ExplicitTop = 191
-          ExplicitWidth = 610
+          ExplicitWidth = 880
           object Label1: TLabel
             Left = 8
             Top = 22
@@ -144,16 +145,14 @@ object TesteViaCeEPForm: TTesteViaCeEPForm
           AlignWithMargins = True
           Left = 3
           Top = 10
-          Width = 633
+          Width = 882
           Height = 92
           Align = alBottom
           Caption = 'Por CEP'
           Ctl3D = False
           ParentCtl3D = False
           TabOrder = 0
-          ExplicitLeft = 0
-          ExplicitTop = 96
-          ExplicitWidth = 616
+          ExplicitWidth = 880
           object Label4: TLabel
             Left = 8
             Top = 27
@@ -186,17 +185,14 @@ object TesteViaCeEPForm: TTesteViaCeEPForm
       object Panel: TPanel
         Left = 0
         Top = 502
-        Width = 639
+        Width = 888
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitLeft = -3
-        ExplicitTop = 122
-        ExplicitWidth = 577
         object ConsultarButton: TButton
           AlignWithMargins = True
-          Left = 511
+          Left = 760
           Top = 3
           Width = 125
           Height = 35
@@ -204,23 +200,108 @@ object TesteViaCeEPForm: TTesteViaCeEPForm
           Caption = 'Consultar'
           TabOrder = 0
           OnClick = ConsultarButtonClick
-          ExplicitLeft = 449
         end
       end
-      object StringGrid: TStringGrid
+      object DBGrid1: TDBGrid
         Left = 0
         Top = 0
-        Width = 639
+        Width = 888
         Height = 502
         Align = alClient
-        BorderStyle = bsNone
-        Ctl3D = False
-        ParentCtl3D = False
+        DataSource = dsEnderecos
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
         TabOrder = 1
-        ExplicitTop = 114
-        ExplicitWidth = 577
-        ExplicitHeight = 120
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -12
+        TitleFont.Name = 'Segoe UI'
+        TitleFont.Style = []
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'CEP'
+            Width = 60
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'Logradouro'
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'Complemento'
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'Bairro'
+            Width = 150
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'Cidade'
+            Width = 200
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'UF'
+            Width = 30
+            Visible = True
+          end>
       end
+    end
+  end
+  object dsEnderecos: TDataSource
+    AutoEdit = False
+    DataSet = CdsEnderecos
+    Left = 268
+    Top = 258
+  end
+  object CdsEnderecos: TClientDataSet
+    PersistDataPacket.Data = {
+      C90000009619E0BD010000001800000007000000000003000000C90002496404
+      000100000000000343455001004900000001000557494454480200020009000A
+      4C6F677261646F75726F0100490000000100055749445448020002003C000B43
+      6F6D706C656D656E746F0100490000000100055749445448020002003C000642
+      616972726F010049000000010005574944544802000200280006436964616465
+      0100490000000100055749445448020002002800025546010049000000010005
+      57494454480200020002000000}
+    Active = True
+    Aggregates = <>
+    Params = <>
+    Left = 228
+    Top = 146
+    object CdsEnderecosId: TIntegerField
+      FieldName = 'Id'
+    end
+    object CdsEnderecosCEP: TStringField
+      FieldName = 'CEP'
+      Size = 9
+    end
+    object CdsEnderecosLogradouro: TStringField
+      FieldName = 'Logradouro'
+      Size = 60
+    end
+    object CdsEnderecosComplemento: TStringField
+      FieldName = 'Complemento'
+      Size = 60
+    end
+    object CdsEnderecosBairro: TStringField
+      FieldName = 'Bairro'
+      Size = 40
+    end
+    object CdsEnderecosCidade: TStringField
+      FieldName = 'Cidade'
+      Size = 40
+    end
+    object CdsEnderecosUF: TStringField
+      FieldName = 'UF'
+      Size = 2
     end
   end
 end

@@ -12,7 +12,9 @@ type
     procedure Inserir(AEndereco: TEnderecoModel);
     procedure Atualizar(AEndereco: TEnderecoModel);
     procedure Excluir(AId: Integer);
-    function Listar: TObjectList<TEnderecoModel>;
+    function ListarEnderecos: TObjectList<TEnderecoModel>;
+    function ListarPorCEP(const ACep: string): TEnderecoModel;
+    function ListarPorEndereco(const AUF, ACidade, ALogradouro: string): TObjectList<TEnderecoModel>;
   end;
 
 implementation

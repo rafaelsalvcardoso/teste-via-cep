@@ -19,7 +19,7 @@ type
     FIdHTTP: TIdHTTP;
     FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
 
-    function Get(const AValue: string): string;
+    function Get(const AValue: string; var AError: Boolean): string;
     function GetFormat: String;
     function ValidarCEP(const AValue: String): String;
     function ValidarEndereco(const AUF, ACidade, ALogradouro: string): string;
@@ -31,8 +31,8 @@ type
     constructor Create; reintroduce; overload;
     destructor Destroy; override;
 
-    function GetCEP(const ACEP: string): string;
-    function GetEndereco(const AUF, ACidade, ALogradouro: string): string;
+    function GetCEP(const ACEP: string; var AError: Boolean): string;
+    function GetEndereco(const AUF, ACidade, ALogradouro: string; var AError: Boolean): string;
   published
     property ReturnFormat: TReturnFormat read FReturnFormat write FReturnFormat;
   end;
@@ -84,7 +84,7 @@ begin
   inherited;
 end;
 
-function TViaCEP.Get(const AValue: string): string;
+function TViaCEP.Get(const AValue: string; var AError: Boolean): string;
 var
   LResponse: TStringStream;
 begin
@@ -97,13 +97,19 @@ begin
 
       if FIdHTTP.ResponseCode = 200 then
       begin
-        if LResponse.DataString.Contains('"erro": true') then
+        if LResponse.DataString.Contains('"erro": "true"') then
+        begin
+          AError := True;
           Exit(MSG_ERRO_CEP_NAO_ENCONTRADO);
+        end;
 
         Result := UTF8ToString(AnsiString(LResponse.DataString));
       end
       else
+      begin
+        AError := True;
         Exit(MSG_ERRO_CONSULTA + FIdHTTP.ResponseCode.ToString);
+      end;
     except
       on E: Exception do
         Result :=  MSG_ERRO_CONSULTA + slinebreak + E.Message;
@@ -114,18 +120,22 @@ begin
   end;
 end;
 
-function TViaCEP.GetCEP(const ACEP: string): string;
+function TViaCEP.GetCEP(const ACEP: string; var AError: Boolean): string;
 begin
   Result := EmptyStr;
   Result := ValidarCEP(ACEP);
 
   if not(Result.IsEmpty) then
+  begin
+    AError := True;
     Exit;
+  end;
 
-  Result := Get(ACEP);
+  Result := Get(ACEP, AError);
 end;
 
-function TViaCEP.GetEndereco(const AUF, ACidade, ALogradouro: string): string;
+function TViaCEP.GetEndereco(const AUF, ACidade, ALogradouro: string;
+  var AError: Boolean): string;
 var
   LEndereco: String;
 begin
@@ -133,12 +143,15 @@ begin
   Result := ValidarEndereco(AUF, ACidade, ALogradouro);
 
   if not(Result.IsEmpty) then
+  begin
+    AError := True;
     Exit;
+  end;
 
   LEndereco := Format(URL_PARAM_ENDERECO, [AUF, ACidade, ALogradouro]);
   LEndereco := TNetEncoding.URL.Encode(LEndereco);
 
-  Result := Get(LEndereco);
+  Result := Get(LEndereco, AError);
 end;
 
 function TViaCEP.GetFormat: String;

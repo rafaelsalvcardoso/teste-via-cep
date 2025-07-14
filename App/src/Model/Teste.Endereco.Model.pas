@@ -45,7 +45,7 @@ implementation
 function TEnderecoModel.toString: String;
 begin
   Result := FCep +sLineBreak+ FLogradouro +' - '+ FComplemento +sLineBreak+
-    FBairro +sLineBreak+ FLocalidade +sLineBreak+ FUf;
+    FBairro +sLineBreak+ FLocalidade +sLineBreak+ FEstado;
 end;
 
 end.

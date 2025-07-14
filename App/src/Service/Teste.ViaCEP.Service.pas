@@ -3,6 +3,7 @@ unit Teste.ViaCEP.Service;
 interface
 
 uses
+  System.Generics.Collections,
   Teste.Endereco.Model,
   ViaCEP.Core;
 
@@ -12,12 +13,13 @@ type
   TViaCEPService = class
   public
     class function ConsultarPorCEP(const ACep: string; AFormato: TViaCEPFormato): TEnderecoModel;
-    class function ConsultarPorEndereco(const AUF, ACidade, ALogradouro: string; AFormato: TViaCEPFormato): TEnderecoModel;
+    class function ConsultarPorEndereco(const AUF, ACidade, ALogradouro: string; AFormato: TViaCEPFormato): TObjectList<TEnderecoModel>;
   end;
 
 implementation
 
 uses
+  System.SysUtils,
   System.Net.HttpClient,
   Teste.ViaCEP.Context,
   Teste.ViaCEP.Interfaces,
@@ -30,9 +32,11 @@ var
   Response: string;
   Context: TViaCEPContext;
   Strategy: IViaCEP;
+  LError: Boolean;
 begin
   LViaCEP := TViaCEP.Create;
   try
+    LError := False;
     case AFormato of
       vcJSON:
         begin
@@ -46,7 +50,11 @@ begin
         end;
     end;
 
-    Response := LViaCEP.GetCEP(ACep);
+    Response := LViaCEP.GetCEP(ACep, LError);
+
+    if LError then
+      raise Exception.Create(Response);
+
     Context := TViaCEPContext.Create(Strategy);
     Result := Context.Executar(Response);
 
@@ -56,15 +64,17 @@ begin
 end;
 
 class function TViaCEPService.ConsultarPorEndereco(const AUF, ACidade,
-  ALogradouro: string; AFormato: TViaCEPFormato): TEnderecoModel;
+  ALogradouro: string; AFormato: TViaCEPFormato): TObjectList<TEnderecoModel>;
 var
   LViaCEP: TViaCEP;
   Response: string;
   Context: TViaCEPContext;
   Strategy: IViaCEP;
+  LError: Boolean;
 begin
   LViaCEP := TViaCEP.Create;
   try
+    LError := False;
     case AFormato of
       vcJSON:
         begin
@@ -78,9 +88,13 @@ begin
         end;
     end;
 
-    Response := LViaCEP.GetEndereco(AUF, ACidade, ALogradouro);
+    Response := LViaCEP.GetEndereco(AUF, ACidade, ALogradouro, LError);
+
+    if LError then
+      raise Exception.Create(Response);
+
     Context := TViaCEPContext.Create(Strategy);
-    Result := Context.Executar(Response);
+    Result := Context.ExecutarLista(Response);
 
   finally
     LViaCEP.Free;
